@@ -1,0 +1,32 @@
+@import '../styles/variables';
+
+.header {
+  padding: $spacing-lg;
+
+  &__flex{
+    display: flex;
+    align-items:center;
+    justify-content: space-between;
+    &-logo{
+      display: flex;
+      align-items:center;
+      &-span{
+        color: $dark-green;
+      }
+    }
+    &-links{
+      display: flex;
+      flex-flow: row nowrap;
+      gap: 10px;
+      color: $white;
+      font-weight: 700;
+      a:hover{
+        color: $dark-green;
+      }
+    }
+  }
+
+  h1,p {
+    color: $white;
+  }
+}
