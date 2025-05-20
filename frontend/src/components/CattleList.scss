@@ -1,3 +1,5 @@
+@import '../styles/variables';
+
 .cattle-list {
   padding: 0 2rem;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -5,7 +7,7 @@
 
   h2 {
     text-align: center;
-    color: #2c3e50;
+    color: $dark-blue;
     margin-bottom: 2rem;
     font-size: 2rem;
   }
@@ -19,7 +21,7 @@
     overflow: hidden;
 
     thead {
-      background-color: #2c3e50;
+      background-color: $dark-blue;
       color: #ffffff;
       
       th {
@@ -84,7 +86,7 @@
             &::before {
               content: attr(data-label);
               font-weight: bold;
-              color: #2c3e50;
+              color: $dark-blue;
             }
           }
         }
