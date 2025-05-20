@@ -165,34 +165,60 @@ function CattleForm() {
       <input name="observacoes" placeholder="Observações" value={formData.observacoes} onChange={handleChange} autoComplete="off" />
 
       {/* Brinco do pai */}
-      <input
-        name="pai"
-        placeholder="Brinco do Pai"
-        value={formData.pai}
-        onChange={handleChange}
-        list="lista-pai"
-        autoComplete="off"
-      />
-      <datalist id="lista-pai">
-        {brincosPai.map((b) => (
-          <option key={b.brinco} value={b.brinco} />
-        ))}
-      </datalist>
+      <div className="autocomplete-wrapper">
+        <input
+          name="pai"
+          placeholder="Brinco do Pai"
+          value={formData.pai}
+          onChange={(e) => {
+            handleChange(e);
+            buscarBrincos(e.target.value, 'pai');
+          }}
+          autoComplete="off"
+        />
+        {brincosPai.length > 0 && (
+          <ul className="autocomplete-list">
+            {brincosPai.map((b) => (
+              <li
+                key={b.brinco}
+                onClick={() =>
+                  setFormData((prev) => ({ ...prev, pai: b.brinco }))
+                }
+              >
+                {b.brinco}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
 
       {/* Brinco da mãe */}
-      <input
-        name="mae"
-        placeholder="Brinco da Mãe"
-        value={formData.mae}
-        onChange={handleChange}
-        list="lista-mae"
-        autoComplete="off"
-      />
-      <datalist id="lista-mae">
-        {brincosMae.map((b) => (
-          <option key={b.brinco} value={b.brinco} />
-        ))}
-      </datalist>
+      <div className="autocomplete-wrapper">
+        <input
+          name="mae"
+          placeholder="Brinco da Mãe"
+          value={formData.mae}
+          onChange={(e) => {
+            handleChange(e);
+            buscarBrincos(e.target.value, 'mae');
+          }}
+          autoComplete="off"
+        />
+        {brincosMae.length > 0 && (
+          <ul className="autocomplete-list">
+            {brincosMae.map((b) => (
+              <li
+                key={b.brinco}
+                onClick={() =>
+                  setFormData((prev) => ({ ...prev, mae: b.brinco }))
+                }
+              >
+                {b.brinco}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
 
       <button type="submit">Cadastrar</button>
     </form>
