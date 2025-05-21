@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { Search } from 'lucide-react';
 import './CattleForm.scss';
+
 
 function CattleForm() {
   const [formData, setFormData] = useState({
@@ -166,16 +168,19 @@ function CattleForm() {
 
       {/* Brinco do pai */}
       <div className="autocomplete-wrapper">
-        <input
-          name="pai"
-          placeholder="Brinco do Pai"
-          value={formData.pai}
-          onChange={(e) => {
-            handleChange(e);
-            buscarBrincos(e.target.value, 'pai');
-          }}
-          autoComplete="off"
-        />
+        <div className="input-icon-wrapper">
+          <Search className="search-icon" size={18} />
+          <input
+            name="pai"
+            placeholder="Brinco do Pai"
+            value={formData.pai}
+            onChange={(e) => {
+              handleChange(e);
+              buscarBrincos(e.target.value, 'pai');
+            }}
+            autoComplete="off"
+          />
+        </div>
         {brincosPai.length > 0 && (
           <ul className="autocomplete-list">
             {brincosPai.map((b) => (
@@ -194,16 +199,19 @@ function CattleForm() {
 
       {/* Brinco da mãe */}
       <div className="autocomplete-wrapper">
-        <input
-          name="mae"
-          placeholder="Brinco da Mãe"
-          value={formData.mae}
-          onChange={(e) => {
-            handleChange(e);
-            buscarBrincos(e.target.value, 'mae');
-          }}
-          autoComplete="off"
-        />
+        <div className="input-icon-wrapper">
+          <Search className="search-icon" size={18} />
+          <input
+            name="mae"
+            placeholder="Brinco da Mãe"
+            value={formData.mae}
+            onChange={(e) => {
+              handleChange(e);
+              buscarBrincos(e.target.value, 'mae');
+            }}
+            autoComplete="off"
+          />
+        </div>
         {brincosMae.length > 0 && (
           <ul className="autocomplete-list">
             {brincosMae.map((b) => (
@@ -219,6 +227,7 @@ function CattleForm() {
           </ul>
         )}
       </div>
+
 
       <button type="submit">Cadastrar</button>
     </form>
