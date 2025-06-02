@@ -1,96 +1,59 @@
-@import '../styles/variables';
-
 .cattle-list {
-  padding: 0 2rem;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 2rem;
   min-height: 100vh;
 
   h2 {
-    text-align: center;
-    color: $dark-blue;
-    margin-bottom: 2rem;
+    color: #ffffff;
+    font-family: 'Roboto', sans-serif;
     font-size: 2rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
   }
 
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    background: #ffffff;
+  .table-container {
+    overflow-x: auto;
+    background-color: #ffffff;
     border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
 
-    thead {
-      background-color: $dark-blue;
-      color: #ffffff;
-      
-      th {
-        padding: 1rem;
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: 'Open Sans', sans-serif;
+      font-size: 0.95rem;
+
+      th, td {
+        padding: 0.75rem 1rem;
         text-align: left;
-        font-weight: 600;
-        font-size: 0.95rem;
+        border-bottom: 1px solid #e0e0e0;
       }
-    }
 
-    tbody {
-      tr {
-        border-bottom: 1px solid #ececec;
+      th {
+        background-color: #a5d6a7;
+        color: #2e7d32;
+        font-weight: bold;
+        position: sticky;
+        top: 0;
+      }
 
-        &:nth-child(even) {
-          background-color: #f9f9f9;
-        }
-
-        &:hover {
-          background-color: #eef6ff;
-        }
-
-        td {
-          padding: 0.8rem 1rem;
-          font-size: 0.9rem;
-          color: #333;
-        }
+      tr:hover {
+        background-color: #f0f8f0;
       }
     }
   }
 
-  // Responsivo para telas menores
   @media (max-width: 768px) {
     table {
-      font-size: 0.8rem;
+      font-size: 0.85rem;
+    }
 
-      thead {
-        display: none;
-      }
+    th, td {
+      padding: 0.5rem;
+    }
 
-      tbody {
-        display: block;
-
-        tr {
-          display: block;
-          margin-bottom: 1rem;
-          background-color: #fff;
-          border-radius: 8px;
-          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-          padding: 1rem;
-
-          td {
-            display: flex;
-            justify-content: space-between;
-            padding: 0.5rem 0;
-            border-bottom: 1px solid #f0f0f0;
-
-            &:last-child {
-              border-bottom: none;
-            }
-
-            &::before {
-              content: attr(data-label);
-              font-weight: bold;
-              color: $dark-blue;
-            }
-          }
-        }
-      }
+    h2 {
+      font-size: 1.5rem;
     }
   }
 }

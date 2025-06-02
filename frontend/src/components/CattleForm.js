@@ -1,237 +1,107 @@
-import React, { useState, useEffect } from 'react';
-import { Search } from 'lucide-react';
+import React, { useState } from 'react';
 import './CattleForm.scss';
 
-
-function CattleForm() {
+const CattleForm = () => {
   const [formData, setFormData] = useState({
-    brinco: '',
-    nome: '',
-    raca: '',
-    sexo: '',
+    matriz: '',
+    reprodutor: '',
+    coberturaData: '',
     nascimento: '',
-    peso: '',
-    categoria: '',
-    situacao: '',
-    observacoes: '',
-    pai: '',
-    mae: ''
+    sexo: '',
+    brinco: '',
+    previsaoParto: '',
+    numeroBezerro: '',
+    raca: '',
   });
 
-  const [categorias, setCategorias] = useState([]);
-  const [racas, setRacas] = useState([]);
-  const [situacoes, setSituacoes] = useState([]);
-  const [brincosPai, setBrincosPai] = useState([]);
-  const [brincosMae, setBrincosMae] = useState([]);
-
-  // Carregar dados estáticos
-  useEffect(() => {
-    fetch('http://localhost:3001/categorias')
-      .then(res => res.json())
-      .then(data => setCategorias(data))
-      .catch(error => console.error('Erro ao carregar categorias:', error));
-  }, []);
-
-  useEffect(() => {
-    fetch('http://localhost:3001/racas')
-      .then(res => res.json())
-      .then(data => setRacas(data))
-      .catch(error => console.error('Erro ao carregar raças:', error));
-  }, []);
-
-  useEffect(() => {
-    fetch('http://localhost:3001/situacoes')
-      .then(res => res.json())
-      .then(data => setSituacoes(data))
-      .catch(error => console.error('Erro ao carregar situações:', error));
-  }, []);
-
-  // Buscar brincos com debounce
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (formData.pai) {
-        buscarBrincos(formData.pai, 'pai');
-      } else {
-        setBrincosPai([]);
-      }
-    }, 300);
-    return () => clearTimeout(timeout);
-  }, [formData.pai]);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (formData.mae) {
-        buscarBrincos(formData.mae, 'mae');
-      } else {
-        setBrincosMae([]);
-      }
-    }, 300);
-    return () => clearTimeout(timeout);
-  }, [formData.mae]);
-
-  const buscarBrincos = async (q, tipo) => {
-    try {
-      const res = await fetch(`http://localhost:3001/matriz/buscar-brincos?q=${q}`);
-      const data = await res.json();
-      if (tipo === 'pai') setBrincosPai(data);
-      else setBrincosMae(data);
-    } catch (error) {
-      console.error('Erro ao buscar brincos:', error);
-    }
-  };
+  const racas = ['Angus', 'Brangus', 'Ultrabeck', 'Outros'];
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = async (e) => {
   e.preventDefault();
+
   try {
-    const response = await fetch('http://localhost:3001/animal', {
+    const res = await fetch('http://localhost:3001/api/animal', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formData)
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
     });
 
-    const result = await response.json();
-
-    if (!response.ok) {
-      alert('Erro ao cadastrar animal: ' + result.erro);
-      return;
-    }
-
-    // Se for matriz, também salva na tabela matriz
-    if (formData.categoria.toLowerCase() === 'matriz') {
-      const resMatriz = await fetch('http://localhost:3001/matriz', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ brinco: formData.brinco })
-      });
-
-      const resultMatriz = await resMatriz.json();
-      if (!resMatriz.ok) {
-        alert('Erro ao cadastrar matriz: ' + resultMatriz.erro);
-        return;
-      }
-    }
-
+    if (res.ok) {
       alert('Animal cadastrado com sucesso!');
       setFormData({
-        brinco: '', nome: '', raca: '', sexo: '', nascimento: '',
-        peso: '', categoria: '', situacao: '', observacoes: '',
-        pai: '', mae: ''
+        matriz: '',
+        reprodutor: '',
+        coberturaData: '',
+        nascimento: '',
+        sexo: '',
+        brinco: '',
+        previsaoParto: '',
+        numeroBezerro: '',
+        raca: '',
       });
-
-    } catch (error) {
-      alert('Erro de conexão com o servidor.');
-      console.error(error);
+    } else {
+      alert('Erro ao cadastrar animal');
+    }
+    } catch (err) {
+      console.error('Erro ao enviar formulário:', err);
+      alert('Erro ao conectar com o servidor');
     }
   };
 
+
   return (
-    <form className="cattle-form" onSubmit={handleSubmit} autoComplete="off">
-      <h2>Cadastrar Animal</h2>
-      <input name="brinco" placeholder="Brinco" value={formData.brinco} onChange={handleChange} required autoComplete="off" />
-      <input name="nome" placeholder="Nome" value={formData.nome} onChange={handleChange} autoComplete="off" />
-      
-      <select name="raca" value={formData.raca} onChange={handleChange} required>
-        <option value="">Selecione a raça</option>
-        {racas.map((r) => (
-          <option key={r.id} value={r.nome}>{r.nome}</option>
+    <form className="cattle-form" onSubmit={handleSubmit}>
+      <h2>Cadastro de Animal</h2>
+
+      <label htmlFor="matriz">Matriz Nº</label>
+      <input name="matriz" value={formData.matriz} onChange={handleChange} />
+
+      <label htmlFor="reprodutor">Reprodutor Nº</label>
+      <input name="reprodutor" value={formData.reprodutor} onChange={handleChange} />
+
+      <label htmlFor="coberturaData">Data da Cobertura</label>
+      <input type="date" name="coberturaData" value={formData.coberturaData} onChange={handleChange} />
+
+      <label htmlFor="nascimento">Data de Nascimento</label>
+      <input type="date" name="nascimento" value={formData.nascimento} onChange={handleChange} />
+
+      <label htmlFor="sexo">Sexo</label>
+      <select name="sexo" value={formData.sexo} onChange={handleChange}>
+        <option value="">Selecione</option>
+        <option value="M">Macho</option>
+        <option value="F">Fêmea</option>
+      </select>
+
+      <label htmlFor="brinco">Brinco</label>
+      <input name="brinco" value={formData.brinco} onChange={handleChange} />
+
+      <label htmlFor="previsaoParto">Previsão de Parto</label>
+      <input type="date" name="previsaoParto" value={formData.previsaoParto} onChange={handleChange} />
+
+      <label htmlFor="numeroBezerro">Número do Bezerro</label>
+      <input name="numeroBezerro" value={formData.numeroBezerro} onChange={handleChange} />
+
+      <label htmlFor="raca">Raça</label>
+      <select name="raca" value={formData.raca} onChange={handleChange}>
+        <option value="">Selecione</option>
+        {racas.map((raca) => (
+          <option key={raca} value={raca}>{raca}</option>
         ))}
       </select>
-
-      <select name="sexo" value={formData.sexo} onChange={handleChange} required>
-        <option value="">Sexo</option>
-        <option value="macho">Macho</option>
-        <option value="femea">Fêmea</option>
-      </select>
-
-      <input name="nascimento" type="date" value={formData.nascimento} onChange={handleChange} required autoComplete="off" />
-      <input name="peso" type="number" placeholder="Peso (kg)" value={formData.peso} onChange={handleChange} autoComplete="off" />
-
-      <select name="categoria" value={formData.categoria} onChange={handleChange} required>
-        <option value="">Selecione a categoria</option>
-        {categorias.map((cat) => (
-          <option key={cat.id} value={cat.nome}>{cat.nome}</option>
-        ))}
-      </select>
-
-      <select name="situacao" value={formData.situacao} onChange={handleChange}>
-        <option value="">Selecione a situação</option>
-        {situacoes.map((s) => (
-          <option key={s.id} value={s.nome}>{s.nome}</option>
-        ))}
-      </select>
-
-      <input name="observacoes" placeholder="Observações" value={formData.observacoes} onChange={handleChange} autoComplete="off" />
-
-      {/* Brinco do pai */}
-      <div className="autocomplete-wrapper">
-        <div className="input-icon-wrapper">
-          <Search className="search-icon" size={18} />
-          <input
-            name="pai"
-            placeholder="Brinco do Pai"
-            value={formData.pai}
-            onChange={(e) => {
-              handleChange(e);
-              buscarBrincos(e.target.value, 'pai');
-            }}
-            autoComplete="off"
-          />
-        </div>
-        {brincosPai.length > 0 && (
-          <ul className="autocomplete-list">
-            {brincosPai.map((b) => (
-              <li
-                key={b.brinco}
-                onClick={() =>
-                  setFormData((prev) => ({ ...prev, pai: b.brinco }))
-                }
-              >
-                {b.brinco}
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-
-      {/* Brinco da mãe */}
-      <div className="autocomplete-wrapper">
-        <div className="input-icon-wrapper">
-          <Search className="search-icon" size={18} />
-          <input
-            name="mae"
-            placeholder="Brinco da Mãe"
-            value={formData.mae}
-            onChange={(e) => {
-              handleChange(e);
-              buscarBrincos(e.target.value, 'mae');
-            }}
-            autoComplete="off"
-          />
-        </div>
-        {brincosMae.length > 0 && (
-          <ul className="autocomplete-list">
-            {brincosMae.map((b) => (
-              <li
-                key={b.brinco}
-                onClick={() =>
-                  setFormData((prev) => ({ ...prev, mae: b.brinco }))
-                }
-              >
-                {b.brinco}
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-
 
       <button type="submit">Cadastrar</button>
     </form>
   );
-}
+};
 
 export default CattleForm;

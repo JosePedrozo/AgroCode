@@ -1,111 +1,59 @@
 @import '../styles/variables';
 
 .cattle-form {
-  max-width: 500px;
+  max-width: 600px;
   margin: 3rem auto;
-  background-color: #ffffff;
-  padding: $spacing-xl;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  font-family: 'Segoe UI', Roboto, sans-serif;
+  background-color: #fff;
+  padding: $spacing-lg;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  font-family: 'Segoe UI', sans-serif;
 
   h2 {
     text-align: center;
-    margin-bottom: $spacing-md;
-    font-size: 1.8rem;
-    color: $dark-blue;
+    margin-bottom: $spacing-lg;
+    font-size: 1.6rem;
+    color: #333;
   }
 
   label {
     display: block;
     margin-top: $spacing-md;
+    margin-bottom: 0.3rem;
     font-weight: 600;
-    color: #333;
+    color: #444;
   }
 
   input,
-  select,
-  textarea {
+  select {
     width: 100%;
-    padding: $spacing-sm;
-    margin-top: 16px;
-    border: 1px solid #dcdcdc;
-    border-radius: 8px;
+    padding: 0.6rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
     font-size: 1rem;
-    transition: border 0.2s, box-shadow 0.2s;
-    background-color: #fafafa;
+    transition: border 0.2s ease;
 
     &:focus {
       border-color: $primary-color;
-      box-shadow: 0 0 0 3px rgba($primary-color, 0.2);
       outline: none;
     }
   }
 
   button {
-    margin-top: $spacing-lg;
-    padding: $spacing-sm;
+    margin-top: $spacing-xl;
     width: 100%;
-    background-color: $dark-blue;
-    color: #ffffff;
+    padding: 0.75rem;
+    background-color: $primary-color;
+    color: white;
     border: none;
-    border-radius: 10px;
-    font-weight: bold;
-    font-size: 1.1rem;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.3s ease;
 
     &:hover {
-      background-color: darken($primary-color, 8%);
-    }
-  }
-
-  .autocomplete-wrapper {
-  position: relative;
-  }
-
-  .autocomplete-list {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background-color: white;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    max-height: 200px;
-    overflow-y: auto;
-    z-index: 10;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    margin-top: 4px;
-    padding: 0;
-    list-style: none;
-  }
-
-  .autocomplete-list li {
-    padding: 10px 12px;
-    cursor: pointer;
-    font-size: 0.95rem;
-    transition: background-color 0.2s;
-  }
-
-  .autocomplete-list li:hover {
-    background-color: #f2f2f2;
-  }
-
-  .input-icon-wrapper {
-  position: relative;
-
-    input {
-      padding-left: 2.2rem;
-    }
-
-    .search-icon {
-      position: absolute;
-      top: 65%;
-      left: 0.6rem;
-      transform: translateY(-50%);
-      color: #888;
-      pointer-events: none;
+      background-color: darken($primary-color, 10%);
     }
   }
 }

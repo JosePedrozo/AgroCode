@@ -1,14 +1,14 @@
 const express = require('express');
 const cors = require('cors');
 const { Pool } = require('pg');
+const path = require('path');
 
 const app = express();
-const port = 3001;
 
 app.use(cors());
 app.use(express.json());
 
-// Configuração da conexão com o banco de dados PostgreSQL
+// Configuração da conexão com o banco PostgreSQL
 const pool = new Pool({
   user: 'postgres',
   host: 'localhost',
@@ -17,135 +17,72 @@ const pool = new Pool({
   port: 5432,
 });
 
-// // Rota de teste
-// app.get('/', (req, res) => {
-//   res.send('API do RuralCode funcionando!');
-// });
+// Rotas da API (devem ficar antes do serve estático do React)
 
-const path = require('path');
-
-
-// Rota para listar todos os animal
-app.get('/animal', async (req, res) => {
+// Rota para inserir um animal
+app.post('/api/animal', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM animal ORDER BY nascimento DESC');
-    res.status(200).json(result.rows);
-  } catch (error) {
-    console.error('Erro ao buscar animal:', error);
-    res.status(500).json({ erro: 'Erro ao buscar animal.' });
+    const {
+      matriz,
+      reprodutor,
+      coberturaData,
+      nascimento,
+      sexo,
+      brinco,
+      previsaoParto,
+      numeroBezerro,
+      raca,
+    } = req.body;
+
+    const query = `
+      INSERT INTO animal (
+        matriz_n, reprodutor_n, cobertura_data, nascimento,
+        sexo, brinco, previsao_parto, numero_bezerro, raca
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+      RETURNING *;
+    `;
+
+    const values = [
+      matriz,
+      reprodutor,
+      coberturaData,
+      nascimento,
+      sexo,
+      brinco,
+      previsaoParto,
+      numeroBezerro,
+      raca,
+    ];
+
+    const result = await pool.query(query, values);
+    res.status(201).json(result.rows[0]);
+  } catch (err) {
+    console.error('Erro ao salvar animal:', err);
+    res.status(500).json({ error: 'Erro interno no servidor' });
   }
 });
 
-// Rota para buscar raças
-app.get('/racas', async (req, res) => {
+// Rota para listar todos os animais
+app.get('/api/animal', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM raca ORDER BY nome ASC');
-    res.status(200).json(result.rows);
-  } catch (error) {
-    console.error('Erro ao buscar raças:', error);
-    res.status(500).json({ erro: 'Erro ao buscar raças.' });
-  }
-});
-
-// Rota para buscar categorias
-app.get('/categorias', async (req, res) => {
-  try {
-    const result = await pool.query('SELECT * FROM categoria ORDER BY nome ASC');
-    res.status(200).json(result.rows);
-  } catch (error) {
-    console.error('Erro ao buscar categorias:', error);
-    res.status(500).json({ erro: 'Erro ao buscar categorias.' });
-  }
-});
-
-// Rota para buscar todas as situações
-app.get('/situacoes', async (req, res) => {
-  try {
-    const result = await pool.query('SELECT * FROM situacao ORDER BY nome ASC');
+    const result = await pool.query('SELECT * FROM animal ORDER BY id DESC');
     res.json(result.rows);
-  } catch (error) {
-    console.error('Erro ao buscar situações:', error);
-    res.status(500).json({ erro: 'Erro ao buscar situações.' });
+  } catch (err) {
+    console.error('Erro ao buscar animais:', err);
+    res.status(500).json({ error: 'Erro interno no servidor' });
   }
 });
 
-// Buscar brincos de animais que são matriz (para pai e mãe)
-app.get('/matriz/buscar-brincos', async (req, res) => {
-  const { q } = req.query;
+// Serve arquivos estáticos do React (build)
+app.use(express.static(path.join(__dirname, '..', 'frontend', 'build')));
 
-  try {
-    const result = await pool.query(
-      'SELECT brinco FROM matriz WHERE brinco ILIKE $1 LIMIT 10',
-      [`${q}%`]  // <-- aqui está o segredo: começa com `q`
-    );
-    res.json(result.rows);
-  } catch (error) {
-    console.error('Erro ao buscar brincos na tabela matriz:', error);
-    res.status(500).json({ erro: 'Erro ao buscar brincos' });
-  }
+// Rota fallback para SPA React - serve index.html para todas as rotas que não começam com /api
+app.get(/^\/(?!api).*/, (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'frontend', 'build', 'index.html'));
 });
 
-// Serve os arquivos estáticos do React
-app.use(express.static(path.join(__dirname, '../frontend/build')));
-
-// Cuidado com esta linha!
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
+// Porta do servidor
+const PORT = 3001;
+app.listen(PORT, () => {
+  console.log(`Servidor rodando na porta ${PORT}`);
 });
-
-
-// Iniciar servidor
-app.listen(port, () => {
-  console.log(`Servidor rodando em http://localhost:${port}`);
-});
-
-// Rota para cadastrar matriz
-app.post('/matriz', async (req, res) => {
-  const { brinco } = req.body;
-
-  if (!brinco) {
-    return res.status(400).json({ erro: 'Brinco é obrigatório' });
-  }
-
-  try {
-    await pool.query('INSERT INTO matriz (brinco) VALUES ($1)', [brinco]);
-    res.status(201).json({ mensagem: 'Brinco inserido na tabela matriz com sucesso' });
-  } catch (error) {
-    console.error('Erro ao inserir na tabela matriz:', error);
-    res.status(500).json({ erro: 'Erro ao inserir matriz' });
-  }
-});
-
-// Rota para cadastrar um novo animal
-app.post('/animal', async (req, res) => {
-  const {
-    brinco, nome, raca, sexo, nascimento,
-    peso, categoria, situacao, observacoes,
-    pai, mae
-  } = req.body;
-
-  try {
-    const result = await pool.query(
-      `INSERT INTO animal (
-        brinco, nome, raca, sexo, nascimento,
-        peso, categoria, situacao, observacoes,
-        pai, mae
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *`,
-      [
-        brinco, nome, raca, sexo, nascimento,
-        peso, categoria, situacao, observacoes,
-        pai, mae
-      ]
-    );
-
-    res.status(201).json({
-      mensagem: 'Animal cadastrado com sucesso!',
-      animal: result.rows[0]
-    });
-
-  } catch (error) {
-    console.error('Erro ao cadastrar animal:', error);
-    res.status(500).json({ erro: 'Erro ao cadastrar animal.' });
-  }
-});
-
