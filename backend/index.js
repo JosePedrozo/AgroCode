@@ -73,6 +73,30 @@ app.get('/api/animal', async (req, res) => {
   }
 });
 
+app.post('/api/usuarios', async (req, res) => {
+  const { tipo, nome, cpf, nomeEmpresa, cnpj, email, senha } = req.body;
+
+  try {
+    if (tipo === 'fisica') {
+      await pool.query(
+        'INSERT INTO usuario (tipo, nome, cpf, email, senha) VALUES ($1, $2, $3, $4, $5)',
+        ['fisica', nome, cpf, email, senha]
+      );
+    } else {
+      await pool.query(
+        'INSERT INTO usuario (tipo, nome_empresa, cnpj, email, senha) VALUES ($1, $2, $3, $4, $5)',
+        ['juridica', nomeEmpresa, cnpj, email, senha]
+      );
+    }
+
+    res.status(201).json({ message: 'Usuário cadastrado com sucesso' });
+  } catch (err) {
+    console.error('Erro ao cadastrar usuário:', err);
+    res.status(500).json({ error: 'Erro ao cadastrar usuário' });
+  }
+});
+
+
 // Serve arquivos estáticos do React (build)
 app.use(express.static(path.join(__dirname, '..', 'frontend', 'build')));
 

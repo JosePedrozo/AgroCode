@@ -1,0 +1,54 @@
+.user-register {
+  max-width: 400px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #f0f8f0;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 80, 0, 0.15);
+
+  h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #205520;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    input[type='text'],
+    input[type='email'],
+    input[type='password'] {
+      padding: 0.7rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    .tipo {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 1rem;
+
+      label {
+        font-weight: bold;
+        color: #205520;
+      }
+    }
+
+    button {
+      padding: 0.75rem;
+      background: #2e7d32;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+
+      &:hover {
+        background: #1b5e20;
+      }
+    }
+  }
+}

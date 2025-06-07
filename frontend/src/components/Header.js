@@ -20,8 +20,10 @@ function Header() {
         </div>
         <div className='header__flex-links'>
           <Link to="/listar">Listagem</Link>
-          <Link to="/cadastrar">Cadastrar</Link>
-          <Link to="/login">Login/Cadastro</Link>
+          <Link to="/registrar-animal">Registrar animal</Link>
+          <Link to="/sobre">Sobre</Link>
+          <Link to="/login">Login</Link>
+          <Link to="/cadastro">Cadastre-se</Link>
         </div>
       </div>
       </header>
