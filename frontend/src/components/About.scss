@@ -1,0 +1,27 @@
+@import '../styles/variables';
+
+.about{
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    gap: 60px;
+    align-items: center;
+
+    &__image{
+        border-radius: 50%;
+        height: 400px;
+        width: 400px;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    &__text{
+        max-width: 500px;
+        display: flex;
+        flex-direction: column;
+        color: white;
+        gap: 30px;
+    }
+}
