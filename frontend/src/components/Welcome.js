@@ -1,4 +1,6 @@
 import './Welcome.scss';
+import { Link } from 'react-router-dom';
+
 
 function Welcome() {
   return (
@@ -12,6 +14,10 @@ function Welcome() {
         <span className='welcome__span'>
             Caso não possua uma conta, realize sua inscrição.
         </span>
+        <div className='welcome__cta'>
+          <Link to="/login"><btn>Login</btn></Link>
+          <Link to="/cadastro"><btn>Cadastre-se</btn></Link> 
+        </div>
     </div>
   );
 }

@@ -96,6 +96,29 @@ app.post('/api/usuarios', async (req, res) => {
   }
 });
 
+app.post('/api/login', async (req, res) => {
+  const { email, senha } = req.body;
+
+  try {
+    const query = `SELECT * FROM usuario WHERE email = $1 AND senha = $2`;
+    const values = [email, senha];
+
+    const result = await pool.query(query, values);
+
+    if (result.rows.length > 0) {
+      // Login bem-sucedido
+      res.status(200).json({ mensagem: 'Login realizado com sucesso', usuario: result.rows[0] });
+    } else {
+      // Login falhou
+      res.status(401).json({ erro: 'Credenciais inválidas' });
+    }
+  } catch (error) {
+    console.error('Erro no login:', error);
+    res.status(500).json({ erro: 'Erro no servidor durante o login' });
+  }
+});
+
+
 
 // Serve arquivos estáticos do React (build)
 app.use(express.static(path.join(__dirname, '..', 'frontend', 'build')));

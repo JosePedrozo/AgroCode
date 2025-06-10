@@ -1,9 +1,13 @@
+import React, { useContext } from 'react';
+import { AuthContext } from '../context/AuthContext';
 import './Header.scss';
 import CompanyLogo from '../icon.png'
 import { Link } from 'react-router-dom';
 
 
 function Header() {
+  const { usuario, logout } = useContext(AuthContext);
+
   return (
     <header className='header'>
       <div className='header__flex'>
@@ -19,11 +23,24 @@ function Header() {
             </div>
         </div>
         <div className='header__flex-links'>
-          <Link to="/listar">Listagem</Link>
-          <Link to="/registrar-animal">Registrar animal</Link>
           <Link to="/sobre">Sobre</Link>
-          <Link to="/login">Login</Link>
-          <Link to="/cadastro">Cadastre-se</Link>
+           {usuario ? (
+          <>
+            <Link to="/registrar-animal">Registrar animal</Link>
+            <Link to="/listar">Listagem do rebanho</Link>
+            <span className="usuario-nome">
+              Bem-vindo, {usuario.nome || usuario.nome_empresa}
+            </span>
+            <button onClick={logout} className="logout-btn">
+              Sair
+            </button>
+          </>
+          ) : (
+            <>
+              <Link to="/login">Entrar</Link>
+              <Link to="/cadastro">Cadastro</Link>
+            </>
+          )}
         </div>
       </div>
       </header>

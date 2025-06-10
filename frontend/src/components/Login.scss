@@ -1,0 +1,50 @@
+@import '../styles/variables';
+.login-form {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 2rem;
+  background-color: #f8f9f4;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+
+  h2 {
+    text-align: center;
+    color: #2e4a2d;
+  }
+
+  label {
+    display: block;
+    margin-top: 1rem;
+    font-weight: bold;
+  }
+
+  input {
+    width: 100%;
+    padding: 0.5rem;
+    margin-top: 0.3rem;
+    border: 1px solid #aaa;
+    border-radius: 5px;
+  }
+
+  button {
+    width: 100%;
+    margin-top: 1.5rem;
+    padding: 0.7rem;
+    background-color: #43723d;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #365a30;
+    }
+  }
+
+  .mensagem {
+    margin-top: 1rem;
+    color: #d9534f;
+    text-align: center;
+  }
+}
