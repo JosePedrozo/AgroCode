@@ -23,11 +23,10 @@ function Header() {
             </div>
         </div>
         <div className='header__flex-links'>
-          <Link to="/sobre">Sobre</Link>
            {usuario ? (
-          <>
-            <Link to="/registrar-animal">Registrar animal</Link>
-            <Link to="/listar">Listagem do rebanho</Link>
+             <>
+            <Link to="/animal/cadastrar">Registrar animal</Link>
+            <Link to="/animal/lista">Listagem do rebanho</Link>
             <span className="usuario-nome">
               Bem-vindo, {usuario.nome || usuario.nome_empresa}
             </span>
@@ -37,8 +36,8 @@ function Header() {
           </>
           ) : (
             <>
-              <Link to="/login">Entrar</Link>
-              <Link to="/cadastro">Cadastro</Link>
+              <Link to="/sobre">Sobre</Link>
+              <Link className='btn-enter' to="/entrar">Entrar</Link>
             </>
           )}
         </div>

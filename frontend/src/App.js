@@ -16,11 +16,13 @@ function App() {
       <Header />
       <Routes>
         <Route path="/" element={<About />} />
-        <Route path="/listar" element={<CattleList />} />
-        <Route path="/registrar-animal" element={<CattleForm />} />
+        <Route path="/animal/lista" element={<CattleList />} />
+        <Route path="/animal/cadastrar" element={<CattleForm isEditMode={false} />} />
+        <Route path="/animal/editar/:id" element={<CattleForm isEditMode={true} />} />
         <Route path="/sobre" element={<About />} />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/cadastro" element={<UserRegister />} />
+        <Route path="/entrar" element={<Welcome />}/>
       </Routes>
     </Router>
     </AuthProvider>

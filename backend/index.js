@@ -22,56 +22,136 @@ const pool = new Pool({
 // Rota para inserir um animal
 app.post('/api/animal', async (req, res) => {
   try {
-    const {
-      matriz,
-      reprodutor,
-      coberturaData,
-      nascimento,
-      sexo,
-      brinco,
-      previsaoParto,
-      numeroBezerro,
-      raca,
-    } = req.body;
+    const campos = [
+      'reprodutor_n',
+      'matriz_n',
+      'cobertura_data',
+      'previsao_parto',
+      'nascimento',
+      'numero_bezerro',
+      'peso',
+      'sexo',
+      'raca'
+    ];
+
+    // Filtra apenas os campos preenchidos
+    const dados = campos.reduce((acc, campo) => {
+      if (req.body[campo] !== undefined && req.body[campo] !== '') {
+        acc[campo] = req.body[campo];
+      }
+      return acc;
+    }, {});
+
+    if (Object.keys(dados).length === 0) {
+      return res.status(400).json({ error: 'Nenhum dado fornecido' });
+    }
+
+    const keys = Object.keys(dados);
+    const values = Object.values(dados);
+    const params = keys.map((_, idx) => `$${idx + 1}`);
 
     const query = `
-      INSERT INTO animal (
-        matriz_n, reprodutor_n, cobertura_data, nascimento,
-        sexo, brinco, previsao_parto, numero_bezerro, raca
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+      INSERT INTO animal (${keys.join(', ')})
+      VALUES (${params.join(', ')})
       RETURNING *;
     `;
 
-    const values = [
-      matriz,
-      reprodutor,
-      coberturaData,
-      nascimento,
-      sexo,
-      brinco,
-      previsaoParto,
-      numeroBezerro,
-      raca,
-    ];
-
     const result = await pool.query(query, values);
     res.status(201).json(result.rows[0]);
+
   } catch (err) {
     console.error('Erro ao salvar animal:', err);
     res.status(500).json({ error: 'Erro interno no servidor' });
   }
 });
 
+
 // Rota para listar todos os animais
 app.get('/api/animal', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM animal ORDER BY id DESC');
+    const result = await pool.query(`
+      SELECT 
+        id,
+        reprodutor_n,
+        matriz_n,
+        cobertura_data,
+        previsao_parto,
+        nascimento,
+        numero_bezerro,
+        peso,
+        sexo,
+        raca,
+        criado_em
+      FROM animal
+      ORDER BY id DESC;
+    `);
     res.json(result.rows);
   } catch (err) {
     console.error('Erro ao buscar animais:', err);
     res.status(500).json({ error: 'Erro interno no servidor' });
   }
 });
+
+app.get('/api/animal/:id', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM animal WHERE id = $1', [req.params.id]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Animal não encontrado' });
+    }
+
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error('Erro ao buscar animal por ID:', err);
+    res.status(500).json({ error: 'Erro interno no servidor' });
+  }
+});
+
+app.put('/api/animal/:id', async (req, res) => {
+  
+  try {
+    const campos = [
+      'reprodutor_n',
+      'matriz_n',
+      'cobertura_data',
+      'previsao_parto',
+      'nascimento',
+      'numero_bezerro',
+      'peso',
+      'sexo',
+      'raca'
+    ];
+
+    const dados = campos.reduce((acc, campo) => {
+      if (req.body.hasOwnProperty(campo)) {
+        acc[campo] = req.body[campo] === '' ? null : req.body[campo];
+      }
+      return acc;
+    }, {});
+
+
+    if (Object.keys(dados).length === 0) {
+      return res.status(400).json({ error: 'Nenhum campo para atualizar' });
+    }
+
+    const sets = Object.keys(dados).map((campo, i) => `${campo} = $${i + 1}`);
+    const values = Object.values(dados);
+
+    const query = `
+      UPDATE animal SET ${sets.join(', ')}
+      WHERE id = $${values.length + 1}
+      RETURNING *;
+    `;
+
+    const result = await pool.query(query, [...values, req.params.id]);
+    res.json(result.rows[0]);
+
+  } catch (err) {
+    console.error('Erro ao atualizar animal:', err);
+    res.status(500).json({ error: 'Erro interno no servidor' });
+  }
+});
+
 
 app.post('/api/usuarios', async (req, res) => {
   const { tipo, nome, cpf, nomeEmpresa, cnpj, email, senha } = req.body;

@@ -17,16 +17,35 @@
     &-links{
       display: flex;
       flex-flow: row nowrap;
+      align-items: center;
       gap: 30px;
       color: $white;
       font-weight: 700;
-      a:hover{
-        color: $dark-green;
+      .btn-enter{
+        background-color: white;
+        padding: 6px;
+        color: #2e7d32;
+        border-radius: 6px;
+        &:hover{
+          background-color: #ccd2cc;
+        }
       }
     }
   }
 
   h1,p {
     color: $white;
+  }
+
+  .logout-btn{
+    background-color: white;
+    padding: 6px;
+    color: #2e7d32;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    &:hover{
+      background-color: #ccd2cc;
+    }
   }
 }
