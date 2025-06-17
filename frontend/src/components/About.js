@@ -8,7 +8,7 @@ function About() {
       </div>
       <div className='about__text'>
         <h2>
-          Gestão efetiva do seu rebanho!
+          Controle total do seu rebanho em poucos cliques
         </h2>
         <p>
           O RuralCode é o aplicativo ideal para o produtor rural moderno que busca controle, 
