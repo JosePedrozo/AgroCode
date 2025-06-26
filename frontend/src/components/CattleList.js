@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './CattleList.scss';
 
 const CattleList = () => {
+  const [busca, setBusca] = useState('');
   const [animais, setAnimais] = useState([]);
   const navigate = useNavigate();
 
@@ -30,9 +31,37 @@ const CattleList = () => {
     navigate(`/animal/editar/${id}`);
   };
 
+  const registerAnimal = () => {
+    navigate(`/animal/cadastrar`);
+  };
+
+  // Aplica filtro com base nas regras
+  const animaisFiltrados = animais.filter((animal) => {
+    if (!busca.trim()) return true;
+
+    const buscaLower = busca.toLowerCase();
+    const matriz = animal.matriz_n?.toLowerCase() || '';
+    const bezerro = animal.numero_bezerro?.toLowerCase() || '';
+
+    const contemNaMatriz = matriz.startsWith(buscaLower);
+    const contemNoBezerro = bezerro && bezerro.startsWith(buscaLower); 
+
+    return contemNaMatriz || contemNoBezerro;
+  });
+
   return (
     <div className="cattle-list">
-      <h2>Listagem do rebanho</h2>
+      <div className="cattle-list-header">
+        <input
+          type="text"
+          placeholder="Pesquisar por Matriz ou Bezerro"
+          value={busca}
+          onChange={(e) => setBusca(e.target.value)}
+          className="search"
+        />
+        <h2>Listagem do rebanho</ h2>
+      </div>
+
       <div className="table-container">
         <table>
           <thead>
@@ -49,14 +78,14 @@ const CattleList = () => {
             </tr>
           </thead>
           <tbody>
-            {animais.length === 0 ? (
+            {animaisFiltrados.length === 0 ? (
               <tr>
-                <td colSpan="9" style={{ textAlign: 'center', padding: '1rem', fontStyle: 'italic', color: '#888' }}>
-                  Sem dados, registre um animal para começar
+                <td colSpan="9" onClick={registerAnimal} style={{ cursor: 'pointer', textAlign: 'center', padding: '1rem', fontStyle: 'italic', color: '#888' }}>
+                  Nenhum resultado encontrado. Clique para registrar um animal.
                 </td>
               </tr>
             ) : (
-              animais.map((animal) => (
+              animaisFiltrados.map((animal) => (
                 <tr key={animal.id} onClick={() => handleRowClick(animal.id)} style={{ cursor: 'pointer' }}>
                   <td>{animal.reprodutor_n || '-'}</td>
                   <td>{animal.matriz_n || '-'}</td>
@@ -71,7 +100,6 @@ const CattleList = () => {
               ))
             )}
           </tbody>
-
         </table>
       </div>
     </div>
