@@ -91,7 +91,6 @@ const CattleForm = () => {
     <form className="cattle-form" onSubmit={handleSubmit}>
       <h2>{id ? 'Editar Animal' : 'Cadastro de Animal'}</h2>
 
-      {/* Tipo de Bezerro */}
       <label>Tipo de Bezerro</label>
       <div className="tipo-bezerro-options">
         <label>
@@ -116,7 +115,6 @@ const CattleForm = () => {
         </label>
       </div>
 
-      {/* Campos comuns */}
       <label htmlFor="reprodutor_n">Reprodutor Nº</label>
       <input name="reprodutor_n" value={formData.reprodutor_n} onChange={handleChange} />
 
@@ -126,7 +124,6 @@ const CattleForm = () => {
       <label htmlFor="cobertura_data">Data da Cobertura</label>
       <input type="date" name="cobertura_data" value={formData.cobertura_data} onChange={handleChange} />
 
-      {/* Condicional */}
       {formData.tipo_bezerro === 'vivo' ? (
         <>
           <label htmlFor="nascimento">Data de Nascimento</label>

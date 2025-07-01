@@ -4,6 +4,7 @@ import './CattleList.scss';
 
 const CattleList = () => {
   const [busca, setBusca] = useState('');
+  const [filtroStatus, setFiltroStatus] = useState('Todos');
   const [animais, setAnimais] = useState([]);
   const navigate = useNavigate();
 
@@ -35,19 +36,21 @@ const CattleList = () => {
     navigate(`/animal/cadastrar`);
   };
 
-  // Aplica filtro com base nas regras
   const animaisFiltrados = animais.filter((animal) => {
-    if (!busca.trim()) return true;
+  const buscaLower = busca.toLowerCase();
+  const matriz = animal.matriz_n?.toLowerCase() || '';
+  const bezerro = animal.numero_bezerro?.toLowerCase() || '';
+  const correspondeBusca = !busca.trim() || matriz.startsWith(buscaLower) || bezerro.startsWith(buscaLower);
 
-    const buscaLower = busca.toLowerCase();
-    const matriz = animal.matriz_n?.toLowerCase() || '';
-    const bezerro = animal.numero_bezerro?.toLowerCase() || '';
+  const nascimento = animal.nascimento;
+  const correspondeStatus =
+    filtroStatus === 'Todos' ||
+    (filtroStatus === 'Vivo' && nascimento) ||
+    (filtroStatus === 'Previsto' && !nascimento);
 
-    const contemNaMatriz = matriz.startsWith(buscaLower);
-    const contemNoBezerro = bezerro && bezerro.startsWith(buscaLower); 
+  return correspondeBusca && correspondeStatus;
+});
 
-    return contemNaMatriz || contemNoBezerro;
-  });
 
   return (
     <div className="cattle-list">
@@ -60,14 +63,20 @@ const CattleList = () => {
           className="search"
         />
         <h2>Listagem do rebanho</ h2>
+
+        <select value={filtroStatus} onChange={(e) => setFiltroStatus(e.target.value)} className="status-filter">
+          <option value="Todos">Todos</option>
+          <option value="Vivo">Vivo</option>
+          <option value="Previsto">Previsto</option>
+        </select>
       </div>
 
       <div className="table-container">
         <table>
           <thead>
             <tr>
-              <th>Reprodutor Nº</th>
-              <th>Matriz Nº</th>
+              <th>Reprodutor</th>
+              <th>Matriz</th>
               <th>Data Cobertura</th>
               <th>Previsão Parto</th>
               <th>Data Nascimento</th>
