@@ -30,9 +30,10 @@ const loginLimiter = rateLimit({
 app.post('/api/animal', async (req, res) => {
   try {
     const campos = [
-      'reprodutor_n', 'matriz_n', 'cobertura_data', 'previsao_parto',
-      'nascimento', 'numero_bezerro', 'peso', 'sexo', 'raca'
+      'tipo_bezerro', 'reprodutor_n', 'matriz_n', 'cobertura_data',
+      'previsao_parto', 'nascimento', 'numero_bezerro', 'peso', 'sexo', 'raca'
     ];
+
 
     const dados = campos.reduce((acc, campo) => {
       if (req.body[campo] !== undefined && req.body[campo] !== '') {
@@ -62,7 +63,7 @@ app.post('/api/animal', async (req, res) => {
 app.get('/api/animal', async (req, res) => {
   try {
     const result = await pool.query(`
-      SELECT id, reprodutor_n, matriz_n, cobertura_data, previsao_parto, 
+      SELECT id, tipo_bezerro, reprodutor_n, matriz_n, cobertura_data, previsao_parto, 
         nascimento, numero_bezerro, peso, sexo, raca, criado_em
       FROM animal ORDER BY id DESC;
     `);
@@ -89,9 +90,10 @@ app.get('/api/animal/:id', async (req, res) => {
 app.put('/api/animal/:id', async (req, res) => {
   try {
     const campos = [
-      'reprodutor_n', 'matriz_n', 'cobertura_data', 'previsao_parto',
-      'nascimento', 'numero_bezerro', 'peso', 'sexo', 'raca'
+      'tipo_bezerro', 'reprodutor_n', 'matriz_n', 'cobertura_data',
+      'previsao_parto', 'nascimento', 'numero_bezerro', 'peso', 'sexo', 'raca'
     ];
+
 
     const dados = campos.reduce((acc, campo) => {
       if (req.body.hasOwnProperty(campo)) {

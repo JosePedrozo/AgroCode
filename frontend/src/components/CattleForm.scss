@@ -32,16 +32,12 @@
     width: 100%;
     margin-top: 1.5rem;
     padding: 0.7rem;
-    background-color: #a5d6a7;
-    color: #2e7d32;
+    background-color:#4ebf4e;
+    color: #014d06;
     font-weight: bold;
     border: none;
     border-radius: 8px;
     cursor: pointer;
-
-    &:hover {
-      background-color:#baffbc;
-    }
   }
 
   .mensagem {
@@ -49,4 +45,17 @@
     color: #d9534f;
     text-align: center;
   }
+
+  .tipo-bezerro-options {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+
+    label {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+  }
+
 }
